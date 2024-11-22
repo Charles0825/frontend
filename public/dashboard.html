@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Energy Monitoring System</title>
+    <link
+      href="assets/vendor/fontawesome/css/fontawesome.min.css"
+      rel="stylesheet"
+    />
+    <link href="assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet" />
+    <link
+      href="assets/vendor/fontawesome/css/brands.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="assets/css/master.css" rel="stylesheet" />
+    <link
+      href="assets/vendor/flagiconcss/css/flag-icon.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="active">
+        <div class="sidebar-header">
+          <img
+            src="assets/img/bootstraper-logo.png"
+            alt="bootraper logo"
+            class="app-logo"
+          />
+        </div>
+        <ul class="list-unstyled components text-secondary">
+          <li>
+            <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="/realtime-monitoring"
+              ><i class="fas fa-tv"></i> Real-Time Monitoring</a
+            >
+          </li>
+          <li>
+            <a href="/historical-data"
+              ><i class="fas fa-history"></i> Historical Data</a
+            >
+          </li>
+          <li>
+            <a href="/settings"><i class="fas fa-cog"></i> Settings</a>
+          </li>
+        </ul>
+      </nav>
+      <div id="body" class="active">
+        <!-- navbar navigation component -->
+        <nav class="navbar navbar-expand-lg navbar-white bg-white">
+          <button type="button" id="sidebarCollapse" class="btn btn-light">
+            <i class="fas fa-bars"></i><span></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav ms-auto">
+              <li class="nav-item dropdown">
+                <div class="nav-dropdown">
+                  <a
+                    href="#"
+                    id="nav2"
+                    class="nav-item nav-link dropdown-toggle text-secondary"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="fas fa-user"></i> <span>Admin</span>
+                    <i style="font-size: 0.8em" class="fas fa-caret-down"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-end nav-link-menu">
+                    <ul class="nav-list">
+                      <li>
+                        <a href="/settings" class="dropdown-item"
+                          ><i class="fas fa-cog"></i> Settings</a
+                        >
+                      </li>
+                      <li>
+                        <a onclick="logout()" class="dropdown-item"
+                          ><i class="fas fa-sign-out-alt"></i> Logout</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <!-- end of navbar navigation -->
+        <div class="content">
+          <div class="container">
+            <div
+              class="modal fade"
+              id="loadingModal"
+              tabindex="-1"
+              aria-hidden="true"
+              aria-labelledby="loadingModalLabel"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-body text-center">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p id="loadingModalText" class="mt-3">
+                      Loading, please wait...
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12 page-header">
+                <div class="page-pretitle">Overview</div>
+                <h2 class="page-title">Dashboard</h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                <div class="card">
+                  <div class="content">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="icon-big text-center">
+                          <i class="teal fas fa-plug"></i>
+                        </div>
+                      </div>
+                      <div class="col-sm-8">
+                        <div class="detail">
+                          <p class="detail-subtitle">Total Consumption</p>
+                          <span class="number" id="todays-consumption"
+                            >N/A</span
+                          >
+                          <!-- Added ID -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="footer">
+                      <hr />
+                      <div class="stats">
+                        <i class="fas fa-clock"></i> Today's Usage
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                <div class="card">
+                  <div class="content">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="icon-big text-center">
+                          <i class="olive fas fa-lightbulb"></i>
+                        </div>
+                      </div>
+                      <div class="col-sm-8">
+                        <div class="detail">
+                          <p class="detail-subtitle">Total Consumption</p>
+                          <span class="number" id="yesterdays-consumption"
+                            >N/A</span
+                          >
+                          <!-- Added ID -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="footer">
+                      <hr />
+                      <div class="stats">
+                        <i class="fas fa-calendar"></i> Yesterday's Usage
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                <div class="card">
+                  <div class="content">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="icon-big text-center">
+                          <i class="violet fas fa-bolt"></i>
+                        </div>
+                      </div>
+                      <div class="col-sm-8">
+                        <div class="detail">
+                          <p class="detail-subtitle">TOTAL CONSUMPTION</p>
+                          <span class="number" id="this-months-consumption"
+                            >N/A</span
+                          >
+                          <!-- Added ID -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="footer">
+                      <hr />
+                      <div class="stats">
+                        <i class="fas fa-calendar"></i> For this Month
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+                <div class="card">
+                  <div class="content">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="icon-big text-center">
+                          <i class="orange fas fa-microchip"></i>
+                        </div>
+                      </div>
+                      <div class="col-sm-8">
+                        <div class="detail">
+                          <p class="detail-subtitle">Total Device</p>
+                          <span class="number" id="running-devices-count"
+                            >N/A</span
+                          >
+                          <!-- Added ID -->
+                        </div>
+                      </div>
+                    </div>
+                    <div class="footer">
+                      <hr />
+                      <div class="stats">
+                        <i class="fas fa-person-running"></i> Recorded Devices
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row" id="deviceCharts">
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="content">
+                        <div class="head">
+                          <h5 class="mb-0">Energy Usage Overview</h5>
+                          <p class="text-muted">Daily energy usage data</p>
+                        </div>
+                        <div class="canvas-wrapper">
+                          <canvas class="chart" id="dailyenergy"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="card">
+                      <div class="content">
+                        <div class="head">
+                          <h5 class="mb-0">Total Energy Usage Overview</h5>
+                          <p class="text-muted">
+                            Current year energy usage data
+                          </p>
+                        </div>
+                        <div class="canvas-wrapper">
+                          <canvas class="chart" id="monthlyenergy"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="col-md-6">
+                    <div class="card">
+                      <div class="content">
+                        <div class="head">
+                          <h5 class="mb-0">Room 1 Overview</h5>
+                          <p class="text-muted">Daily energy usage data</p>
+                        </div>
+                        <div class="canvas-wrapper">
+                          <canvas class="chart" id="room1Chart"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="assets/js/env.js"></script>
+    <script src="assets/vendor/jquery/jquery.min.js"></script>
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/chartsjs/Chart.min.js"></script>
+    <script src="assets/js/dashboard-charts.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/index.js"></script>
+    <script src="assets/js/protect.js"></script>
+  </body>
+</html>
