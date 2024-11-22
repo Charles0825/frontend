@@ -1,3 +1,5 @@
+const url = window.env.URL;
+
 function getUsername() {
   return localStorage.getItem("username");
 }
@@ -21,7 +23,7 @@ document
       const currentUsername = getUsername();
 
       // Send a single request to change username and/or password
-      const response = await fetch("http://localhost:5555/api/user/change", {
+      const response = await fetch(`${url}/api/user/change`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -8,12 +8,11 @@ const fetch = require("node-fetch");
 const mqtt = require("mqtt");
 const http = require("http");
 const { Server } = require("socket.io");
-
+require("dotenv").config();
 const app = express();
-const PORT = 5050;
-const BACKEND_API_URL = "http://raspi:5555";
-const JWT_SECRET =
-  "cb60a92efde349adb5b9159f3a23bdebf89e78fede12a12fc6ad858f8f5a6e4b";
+const PORT = process.env.SERVER_PORT || 4040;
+const BACKEND_API_URL = process.env.BACKEND_URL;
+const JWT_SECRET = process.env.JWT;
 
 const server = http.createServer(app); // Create HTTP server
 const io = new Server(server); // Initialize Socket.io with the server
