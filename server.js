@@ -11,7 +11,7 @@ const { Server } = require("socket.io");
 
 const app = express();
 const PORT = 5050;
-const BACKEND_API_URL = "http://127.0.0.1:5555";
+const BACKEND_API_URL = "http://raspi:5555";
 const JWT_SECRET =
   "cb60a92efde349adb5b9159f3a23bdebf89e78fede12a12fc6ad858f8f5a6e4b";
 
