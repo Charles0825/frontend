@@ -1,4 +1,4 @@
 window.env = {
-  URL: "172.19.0.1:5555",
+  URL: "http://backend:5555",
   // URL: "http://127.0.0.1:5555",
 };
