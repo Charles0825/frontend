@@ -4,7 +4,7 @@ $(document).ready(function () {
   let table; // Declare a variable for the DataTable instance
 
   function initializeDataTable() {
-    showLoadingModal("Loading Data Please Wait...");
+    // showLoadingModal("Loading Data Please Wait...");
     table = $("#dataTables-example").DataTable({
       responsive: true,
       pageLength: 20,
@@ -19,7 +19,7 @@ $(document).ready(function () {
       ajax: {
         url: `${url}/api/sensors`, // Your API endpoint
         dataSrc: function (json) {
-          hideLoadingModal();
+          // hideLoadingModal();
           return json.data; // Assuming your API returns an object with a data array
         },
       },
@@ -211,7 +211,7 @@ $(document).ready(function () {
       singleDate: singleDate || "",
     };
 
-    showLoadingModal("Processing your request...");
+    // showLoadingModal("Processing your request...");
 
     // Fetch data from the backend
     fetch(`${url}/api/sensors?${new URLSearchParams(queryParams).toString()}`)
@@ -238,7 +238,7 @@ $(document).ready(function () {
         }
 
         // Draw the updated table
-        hideLoadingModal();
+        // hideLoadingModal();
         table.draw();
       })
       .catch((error) => {
