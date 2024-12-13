@@ -39,12 +39,50 @@ mqttClient.on("message", (topic, message) => {
   }
 });
 
-// Socket.io connection handling
+// // Socket.io connection handling
+// io.on("connection", (socket) => {
+//   console.log("New client connected");
+
+//   socket.on("disconnect", () => {
+//     console.log("Client disconnected");
+//   });
+// });
+
+// Handle Socket.io connections
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log("New Socket.io client connected:", socket.id);
+
+  // Handle client control commands
+  socket.on("control-device", (data) => {
+    try {
+      const { deviceId, action } = data;
+      if (deviceId && action) {
+        const mqttTopic = `relay/${deviceId.toLowerCase()}`; // Construct the control topic
+        const mqttMessage = action; // Create the control message
+
+        mqttClient.publish(mqttTopic, mqttMessage, (err) => {
+          if (err) {
+            console.error("Failed to publish MQTT message:", err);
+            socket.emit(
+              "error",
+              "Failed to send control command to the device"
+            );
+          } else {
+            console.log(`Published MQTT message to ${mqttTopic}:`, mqttMessage);
+            socket.emit("success", `Device ${deviceId} ${action}`);
+          }
+        });
+      } else {
+        socket.emit("error", "Invalid control command");
+      }
+    } catch (error) {
+      console.error("Error handling control-device event:", error);
+      socket.emit("error", "Failed to process control command");
+    }
+  });
 
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
+    console.log("Socket.io client disconnected:", socket.id);
   });
 });
 

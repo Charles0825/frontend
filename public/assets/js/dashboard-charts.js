@@ -528,10 +528,13 @@ async function renderCharts() {
   document.getElementById("running-devices-count").textContent =
     consumptionSummary.runningDevicesCount;
 
-  // Render Daily Energy Usage Chart
+  const formatEnergyForChart = (value) =>
+    value >= 1000 ? (value / 1000).toFixed(2) : value.toFixed(2);
+
   const dailyChartContext = document
     .getElementById("dailyenergy")
     .getContext("2d");
+
   const labels = Array.from({ length: 31 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - (30 - i)); // Adjust for the last 31 days
@@ -544,11 +547,21 @@ async function renderCharts() {
       labels: labels,
       datasets: [
         {
-          label: "Energy Usage (kWh)",
+          label: "Energy Usage (Wh)",
           data: dailyEnergyUsage,
           borderColor: "rgba(75, 192, 192, 1)",
           backgroundColor: "rgba(75, 192, 192, 0.2)",
           borderWidth: 1,
+        },
+        {
+          label: "Energy Usage (kWh)",
+          data: dailyEnergyUsage.map((value) =>
+            formatEnergyForChart(value / 1000)
+          ),
+          borderColor: "rgba(153, 102, 255, 1)",
+          backgroundColor: "rgba(153, 102, 255, 0.2)",
+          borderWidth: 1,
+          hidden: true,
         },
       ],
     },
@@ -563,6 +576,7 @@ async function renderCharts() {
   const monthlyChartContext = document
     .getElementById("monthlyenergy")
     .getContext("2d");
+
   new Chart(monthlyChartContext, {
     type: "bar",
     data: {
@@ -582,11 +596,21 @@ async function renderCharts() {
       ],
       datasets: [
         {
-          label: "Energy Usage (kWh)",
+          label: "Energy Usage (Wh)",
           data: monthlyEnergyUsage,
           backgroundColor: "rgba(153, 102, 255, 0.2)",
           borderColor: "rgba(153, 102, 255, 1)",
           borderWidth: 1,
+        },
+        {
+          label: "Energy Usage (kWh)",
+          data: monthlyEnergyUsage.map((value) =>
+            formatEnergyForChart(value / 1000)
+          ),
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+          hidden: true,
         },
       ],
     },
@@ -597,30 +621,32 @@ async function renderCharts() {
 
   // Render Device-specific Charts
   const deviceChartsContainer = document.getElementById("deviceCharts");
+
   Object.keys(dailyEnergyUsagePerRoom).forEach((deviceName) => {
     const deviceCard = document.createElement("div");
     deviceCard.className = "col-md-6";
     deviceCard.innerHTML = `
-      <div class="card">
-        <div class="content">
-          <div class="head">
-            <h5 class="mb-0">${deviceName} Overview</h5>
-            <p class="text-muted">Daily energy usage data</p>
-          </div>
-          <div class="canvas-wrapper">
-            <canvas class="chart" id="${deviceName.replace(
-              " ",
-              "_"
-            )}_chart"></canvas>
+        <div class="card">
+          <div class="content">
+            <div class="head">
+              <h5 class="mb-0">${deviceName} Overview</h5>
+              <p class="text-muted">Daily energy usage data</p>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas class="chart" id="${deviceName.replace(
+                " ",
+                "_"
+              )}_chart"></canvas>
+            </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
     deviceChartsContainer.appendChild(deviceCard);
 
     const ctx = document
       .getElementById(`${deviceName.replace(" ", "_")}_chart`)
       .getContext("2d");
+
     const dailyUsage = dailyEnergyUsagePerRoom[deviceName];
 
     if (dailyUsage && dailyUsage.length === 31) {
@@ -630,11 +656,21 @@ async function renderCharts() {
           labels: labels,
           datasets: [
             {
-              label: "Energy Usage (kWh)",
+              label: "Energy Usage (Wh)",
               data: dailyUsage,
               backgroundColor: "rgba(75, 192, 192, 0.6)",
               borderColor: "rgba(75, 192, 192, 1)",
               borderWidth: 1,
+            },
+            {
+              label: "Energy Usage (kWh)",
+              data: dailyUsage.map((value) =>
+                formatEnergyForChart(value / 1000)
+              ),
+              backgroundColor: "rgba(153, 102, 255, 0.6)",
+              borderColor: "rgba(153, 102, 255, 1)",
+              borderWidth: 1,
+              hidden: true,
             },
           ],
         },
@@ -642,7 +678,7 @@ async function renderCharts() {
           scales: {
             y: {
               beginAtZero: true,
-              title: { display: true, text: "Energy Usage (kWh)" },
+              title: { display: true, text: "Energy Usage (Wh)" },
             },
             x: { title: { display: true, text: "Days" } },
           },
